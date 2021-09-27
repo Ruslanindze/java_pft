@@ -1,89 +1,83 @@
 package ru.stqa.ptf.addressbook;
 
-import java.util.concurrent.TimeUnit;
-import org.testng.annotations.*;
-import static org.testng.Assert.*;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 
 public class GroupCreationTests {
-    private WebDriver driver;
-    private String baseUrl;
-    private boolean acceptNextAlert = true;
-    private StringBuffer verificationErrors = new StringBuffer();
+    FirefoxDriver driver;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeMethod
     public void setUp() throws Exception {
+        System.setProperty("webdriver.gecko.driver", ConfProperties.getProperty("firefoxDriver"));
         driver = new FirefoxDriver();
-        baseUrl = "https://www.google.com/";
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
     }
 
     @Test
-    public void testBook000() throws Exception {
-        driver.findElement(By.name("user")).clear();
-        driver.findElement(By.name("user")).sendKeys("");
-        driver.findElement(By.name("user")).click();
-        driver.findElement(By.name("user")).clear();
-        driver.findElement(By.name("user")).sendKeys("admin");
-        driver.findElement(By.name("pass")).click();
-        driver.findElement(By.name("pass")).clear();
-        driver.findElement(By.name("pass")).sendKeys("secret");
-        driver.findElement(By.xpath("//input[@value='Login']")).click();
-        driver.findElement(By.linkText("groups")).click();
-        driver.findElement(By.name("new")).click();
-        driver.findElement(By.name("group_name")).click();
-        driver.findElement(By.name("group_name")).clear();
-        driver.findElement(By.name("group_name")).sendKeys("буба касторский");
-        driver.findElement(By.name("group_header")).click();
-        driver.findElement(By.name("group_header")).clear();
-        driver.findElement(By.name("group_header")).sendKeys("Бареба");
-        driver.findElement(By.name("group_footer")).clear();
-        driver.findElement(By.name("group_footer")).sendKeys("Комментарии баребы");
-        driver.findElement(By.name("submit")).click();
-        driver.findElement(By.linkText("group page")).click();
+    public void groupCreationTests() {
+        // STEP 1. Открываем сайт
+        driver.get(ConfProperties.getProperty("loginPage"));
+
+        // STEP 2. Логинимся
+        WebElement loginName = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@name='user']"));
+        loginName.clear();
+        loginName.sendKeys(ConfProperties.getProperty("login"));
+
+        WebElement loginPassword = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@name='pass']"));
+        loginPassword.clear();
+        loginPassword.sendKeys(ConfProperties.getProperty("password"));
+
+        WebElement buttonInput = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@value='Login']"));
+        buttonInput.click();
+
+        // STEP 3. Проверяем пользователя.
+        String nameUser = driver.findElement(By.xpath("//form[@name='logout']/b")).getText();
+        Assert.assertTrue(nameUser.contains(ConfProperties.getProperty("login")), "Логин прошёл успешно.");
+
+        // STEP 4. Переходим в меню groups через нажатие кнопки и проверяем url.
+        WebElement buttonGroups = driver.findElement(By.xpath("//div[@id='nav']/ul/li[@class='admin']"));
+        buttonGroups.click();
+        Assert.assertEquals(driver.getCurrentUrl(), ConfProperties.getProperty("groupsPage"));
+
+        // STEP 5. Создаём группу с произвольными данными.
+        WebElement buttonNewGroup = driver.findElement(By.xpath("//input[@name='new'][1]"));
+        buttonNewGroup.click();
+
+        WebElement fieldGroupName = driver.findElement(By.xpath("//input[@name='group_name']"));
+        fieldGroupName.click();
+        fieldGroupName.sendKeys("Джуны Сопрано");
+
+        WebElement fieldGroupHeader = driver.findElement(By.xpath("//textarea[@name='group_header']"));
+        fieldGroupHeader.sendKeys("Сопрано рулят!");
+
+        WebElement fieldFooter = driver.findElement(By.xpath("//textarea[@name='group_footer']"));
+        fieldFooter.sendKeys("Тут наша кухня. Берегитесь семьи Сопаретто!!!");
+
+        WebElement buttonEnterInfo = driver.findElement(By.xpath("//input[@name='submit']"));
+        buttonEnterInfo.click();
+
+        // STEP 6. Возвращаемся в список групп и проверяем созданную группу.
+        WebElement linkReturnGroupPage = driver.findElement(By.xpath("//div[@class='msgbox']//a"));
+        linkReturnGroupPage.click();
+        ArrayList<WebElement> groups = (ArrayList<WebElement>) driver.findElements(By.xpath("//div[@id='content']//span"));
+
+//        for (WebElement group: groups) {
+//
+//        }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    @AfterMethod
+    public void tearDown() throws InterruptedException {
+        TimeUnit.MILLISECONDS.sleep(3000);
         driver.quit();
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            fail(verificationErrorString);
-        }
-    }
-
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
     }
 }
