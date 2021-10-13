@@ -1,4 +1,4 @@
-package ru.stqa.ptf.addressbook;
+package ru.stqa.ptf.addressbook.model;
 
 import java.io.FileInputStream;
 import java.io.IOException;

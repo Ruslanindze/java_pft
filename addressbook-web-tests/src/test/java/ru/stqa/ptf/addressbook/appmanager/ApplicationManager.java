@@ -1,22 +1,17 @@
-package ru.stqa.ptf.addressbook;
+package ru.stqa.ptf.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import ru.stqa.ptf.addressbook.model.ConfProperties;
+import ru.stqa.ptf.addressbook.model.GroupData;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-
-public class GroupCreationTests {
+public class ApplicationManager {
     FirefoxDriver driver;
 
-    @BeforeMethod
-    public void setUp() throws Exception {
+    public void init() {
         System.setProperty("webdriver.gecko.driver", ConfProperties.getProperty("firefoxDriver"));
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
@@ -33,32 +28,19 @@ public class GroupCreationTests {
         loginPassword.sendKeys(ConfProperties.getProperty("password"));
         WebElement buttonInput = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@value='Login']"));
         buttonInput.click();
-
-        String nameUser = driver.findElement(By.xpath("//form[@name='logout']/b")).getText();
-        Assert.assertTrue(nameUser.contains(ConfProperties.getProperty("login")), "Логин прошёл успешно.");
     }
 
-    @Test
-    public void testGroupCreation() {
-        gotoGroupPage();
-        initGroupCreation();
-        fillGroupForm(new GroupData("June Sopranos", "The Sopranos rule!", "This is our kitchen. Watch out for the Soparetto family !!!"));
-        submitGroupCreation();
-        returnToGroupPage("June Sopranos");
-    }
-
-    private void gotoGroupPage() {
+    public void gotoGroupPage() {
         WebElement buttonGroups = driver.findElement(By.xpath("//div[@id='nav']/ul/li[@class='admin']"));
         buttonGroups.click();
-        Assert.assertEquals(driver.getCurrentUrl(), ConfProperties.getProperty("groupsPage"));
     }
 
-    private void initGroupCreation() {
+    public void initGroupCreation() {
         WebElement buttonNewGroup = driver.findElement(By.xpath("//input[@name='new'][1]"));
         buttonNewGroup.click();
     }
 
-    private void fillGroupForm(GroupData groupData) {
+    public void fillGroupForm(GroupData groupData) {
         WebElement fieldGroupName = driver.findElement(By.xpath("//input[@name='group_name']"));
         fieldGroupName.click();
         fieldGroupName.sendKeys(groupData.getName());
@@ -70,30 +52,28 @@ public class GroupCreationTests {
         fieldFooter.sendKeys(groupData.getFooter());
     }
 
-    private void submitGroupCreation() {
+    public void submitGroupCreation() {
         WebElement buttonEnterInfo = driver.findElement(By.xpath("//input[@name='submit']"));
         buttonEnterInfo.click();
     }
 
-    private void returnToGroupPage(String nameGroup) {
+    public void returnToGroupPage() {
         WebElement linkReturnGroupPage = driver.findElement(By.xpath("//div[@class='msgbox']//a"));
         linkReturnGroupPage.click();
-        ArrayList<WebElement> groups = (ArrayList<WebElement>) driver.findElements(By.xpath("//div[@id='content']//span"));
-
-        boolean findNeedGroup = false;
-        for (WebElement group : groups) {
-            String currName = group.getText();
-            if (nameGroup.equals(currName)) {
-                findNeedGroup = true;
-                break;
-            }
-        }
-        Assert.assertTrue(findNeedGroup);
     }
 
-    @AfterMethod
-    public void tearDown() throws InterruptedException {
+    public void stop() throws InterruptedException {
         TimeUnit.MILLISECONDS.sleep(3000);
         driver.quit();
+    }
+
+    public void deleteSelectedGroups() {
+        WebElement buttonDeleteGroup = driver.findElement(By.xpath("//input[@name='delete']"));
+        buttonDeleteGroup.click();
+    }
+
+    public void selectGroup() {
+        WebElement selectGroup = driver.findElement(By.xpath("//input[@name='selected[]']"));
+        selectGroup.click();
     }
 }
