@@ -1,51 +1,40 @@
 package ru.stqa.ptf.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.stqa.ptf.addressbook.model.GroupData;
 
-public class GroupHelper {
-    private FirefoxDriver driver;
+public class GroupHelper extends HelperBase {
 
     public GroupHelper(FirefoxDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public void initGroupCreation() {
-        WebElement buttonNewGroup = driver.findElement(By.xpath("//input[@name='new'][1]"));
-        buttonNewGroup.click();
+        click(By.xpath("//input[@name='new'][1]"));
     }
 
     public void fillGroupForm(GroupData groupData) {
-        WebElement fieldGroupName = driver.findElement(By.xpath("//input[@name='group_name']"));
-        fieldGroupName.click();
-        fieldGroupName.sendKeys(groupData.getName());
+        type(By.xpath("//input[@name='group_name']"), groupData.getName());
 
-        WebElement fieldGroupHeader = driver.findElement(By.xpath("//textarea[@name='group_header']"));
-        fieldGroupHeader.sendKeys(groupData.getHeader());
+        type(By.xpath("//textarea[@name='group_header']"), groupData.getHeader());
 
-        WebElement fieldFooter = driver.findElement(By.xpath("//textarea[@name='group_footer']"));
-        fieldFooter.sendKeys(groupData.getFooter());
+        type(By.xpath("//textarea[@name='group_footer']"), groupData.getFooter());
     }
 
     public void submitGroupCreation() {
-        WebElement buttonEnterInfo = driver.findElement(By.xpath("//input[@name='submit']"));
-        buttonEnterInfo.click();
+        click(By.xpath("//input[@name='submit']"));
     }
 
     public void returnToGroupPage() {
-        WebElement linkReturnGroupPage = driver.findElement(By.xpath("//div[@class='msgbox']//a"));
-        linkReturnGroupPage.click();
+        click(By.xpath("//div[@class='msgbox']//a"));
     }
 
     public void deleteSelectedGroups() {
-        WebElement buttonDeleteGroup = driver.findElement(By.xpath("//input[@name='delete']"));
-        buttonDeleteGroup.click();
+        click(By.xpath("//input[@name='delete']"));
     }
 
     public void selectGroup() {
-        WebElement selectGroup = driver.findElement(By.xpath("//input[@name='selected[]']"));
-        selectGroup.click();
+        click(By.xpath("//input[@name='selected[]']"));
     }
 }

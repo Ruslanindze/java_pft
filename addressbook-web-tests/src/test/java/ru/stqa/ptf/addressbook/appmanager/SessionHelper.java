@@ -1,26 +1,18 @@
 package ru.stqa.ptf.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.stqa.ptf.addressbook.model.ConfProperties;
 
-public class SessionHelper {
-
-    private FirefoxDriver driver;
+public class SessionHelper extends HelperBase {
 
     public SessionHelper(FirefoxDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public void login() {
-        WebElement loginName = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@name='user']"));
-        loginName.clear();
-        loginName.sendKeys(ConfProperties.getProperty("login"));
-        WebElement loginPassword = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@name='pass']"));
-        loginPassword.clear();
-        loginPassword.sendKeys(ConfProperties.getProperty("password"));
-        WebElement buttonInput = driver.findElement(By.xpath("//form[@id='LoginForm']/input[@value='Login']"));
-        buttonInput.click();
+        type(By.xpath("//form[@id='LoginForm']/input[@name='user']"), ConfProperties.getProperty("login"));
+        type(By.xpath("//form[@id='LoginForm']/input[@name='pass']"), ConfProperties.getProperty("password"));
+        click(By.xpath("//form[@id='LoginForm']/input[@value='Login']"));
     }
 }
