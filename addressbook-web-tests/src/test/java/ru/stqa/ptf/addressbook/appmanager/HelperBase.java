@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class HelperBase {
     protected FirefoxDriver driver;
@@ -17,6 +18,12 @@ public class HelperBase {
         field.click();
         field.clear();
         field.sendKeys(text);
+    }
+
+    protected void select(By locator, String text) {
+        WebElement selectElem = driver.findElement(locator);
+        Select select = new Select(selectElem);
+        select.selectByVisibleText(text);
     }
 
     protected void click(By locator) {

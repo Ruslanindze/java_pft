@@ -1,0 +1,28 @@
+{
+    "nameFirst": "Hank",
+    "nameMiddle": "Stahovich",
+    "nameLast": "Mudi",
+    "nameNick": "Loverman",
+
+    "pathToPhoto": "F:/FreeRus/Training/Dev/Java/JavaForTesters/java_pft/addressbook-web-tests/src/test/resources/photos/HankMudi.jpg",
+    "title": "My Company",
+    "company": "OOO Dudko",
+    "address": "Rostov-On-Don, Nizhebulvarnay, 6",
+
+    "phoneHome" :  "88634123456",
+    "phoneMobile" : "89007832318",
+    "phoneWork" :  "89607830000",
+    "fax" : "78123333333",
+
+    "emailFirst" : "twix@mail.ru",
+    "emailSecond" : "twix@yandex.ru",
+    "emailThird" :  "twix@gmail.com",
+    "homePage" : "https://twix.corp.com",
+    "birthDay" :  "15 October 1990",
+    "anniversary" : "8 August 2005",
+    "group" :  "test1",
+
+    "secondaryAddress": "Moscow, St.Salupezkay, 88",
+    "secondaryHome": "Azov, Petrovskay, 85A",
+    "secondaryNotes": "For my notes and others things..."
+}

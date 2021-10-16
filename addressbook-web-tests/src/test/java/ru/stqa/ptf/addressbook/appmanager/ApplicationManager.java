@@ -11,6 +11,7 @@ public class ApplicationManager {
     private SessionHelper sessionHelper;
     private NavigationHelper navigationHelper;
     private GroupHelper groupHelper;
+    private ContactHelper contactHelper;
 
     public void init() {
         System.setProperty("webdriver.gecko.driver", ConfProperties.getProperty("firefoxDriver"));
@@ -18,6 +19,7 @@ public class ApplicationManager {
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         driver.get(ConfProperties.getProperty("loginPage"));
         groupHelper = new GroupHelper(driver);
+        contactHelper = new ContactHelper(driver);
         navigationHelper = new NavigationHelper(driver);
         sessionHelper = new SessionHelper(driver);
         sessionHelper.login();
@@ -30,6 +32,10 @@ public class ApplicationManager {
 
     public GroupHelper getGroupHelper() {
         return groupHelper;
+    }
+
+    public ContactHelper getContactHelper() {
+        return contactHelper;
     }
 
     public NavigationHelper getNavigationHelper() {
